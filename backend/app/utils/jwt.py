@@ -1,7 +1,11 @@
+import os
 from jose import jwt, JWTError
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
 
-SECURITY_KEY = "fastapi"
+load_dotenv()
+
+SECURITY_KEY = os.getenv("SECURITY_KEY", "fastapi")
 ALGORITHM = "HS256"
 
 def create_access_token(data: dict):
