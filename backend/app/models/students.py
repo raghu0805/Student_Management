@@ -8,5 +8,5 @@ class Student(Base):
     name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True)
     course = Column(String)
-    # year = Column(Integer)
+    year = Column(Integer)
     user_id = Column(Integer, ForeignKey("users.id"))
