@@ -4,7 +4,6 @@ import api from '../api/axios';
 import { Lock, Mail, User, Loader2 } from 'lucide-react';
 import { formatError } from '../utils/error';
 
-
 const Register = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +25,6 @@ const Register = () => {
     } catch (err) {
       setError(formatError(err.response) || 'Registration failed. Try again.');
     } finally {
-
       setLoading(false);
     }
   };

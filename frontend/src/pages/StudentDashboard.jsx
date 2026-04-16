@@ -4,14 +4,12 @@ import { useAuth } from '../context/AuthContext';
 import { User, Save, LogOut, Loader2, BookOpen, GraduationCap } from 'lucide-react';
 import { formatError } from '../utils/error';
 
-
 const StudentDashboard = () => {
   const [profile, setProfile] = useState(null);
   const [name, setName] = useState('');
   const [course, setCourse] = useState('');
   const [year, setYear] = useState(1);
   const [loading, setLoading] = useState(true);
-
   const [updating, setUpdating] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -28,7 +26,6 @@ const StudentDashboard = () => {
       setName(resp.data.name);
       setCourse(resp.data.course);
       setYear(resp.data.year || 1);
-
     } catch (err) {
       console.error(err);
       setError('Student record not yet created by Admin.');
@@ -45,12 +42,10 @@ const StudentDashboard = () => {
     try {
       await api.put('/api/v1/students/me', { name, course, year });
       setSuccess('Profile updated successfully!');
-
       fetchProfile();
     } catch (err) {
       setError(formatError(err.response) || 'Failed to update profile.');
     } finally {
-
       setUpdating(false);
     }
   };
@@ -127,7 +122,6 @@ const StudentDashboard = () => {
                 <label className="form-label">Year of Study</label>
                 <input className="form-input" type="number" value={year} onChange={e => setYear(parseInt(e.target.value) || 1)} required />
               </div>
-
 
               <button className="btn btn-primary" style={{ display: 'flex', width: 'auto', padding: '0.75rem 2rem', gap: '0.5rem', alignItems: 'center' }} disabled={updating || !profile}>
                 {updating ? <Loader2 className="animate-spin" size={20} /> : <><Save size={20} /> Update Profile</>}

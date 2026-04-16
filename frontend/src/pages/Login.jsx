@@ -5,7 +5,6 @@ import { useAuth } from '../context/AuthContext';
 import { Lock, Mail, Loader2, LogIn } from 'lucide-react';
 import { formatError } from '../utils/error';
 
-
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,13 +25,6 @@ const Login = () => {
         return;
       }
 
-      // We need to decode the token to get role, or get it from elsewhere.
-      // Based on auth.py, the token payload has 'sub' (email) and 'role'.
-      // For simplicity, let's assume roles are 'admin' or 'student'.
-      // A more robust way is to use jwt-decode.
-      // Since I can't install jwt-decode easily while npm is running, let's assume we fetch role from backend after login or use a simple hack.
-      
-      // Let's decode it manually for the purpose of this task
       const token = resp.data.access_token;
       const payload = JSON.parse(atob(token.split('.')[1]));
       
@@ -45,7 +37,6 @@ const Login = () => {
     } catch (err) {
       setError(formatError(err.response) || 'Login failed. Please check your credentials.');
     } finally {
-
       setLoading(false);
     }
   };

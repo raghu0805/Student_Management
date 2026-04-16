@@ -5,10 +5,9 @@ from app.routes import auth, students
 
 app = FastAPI(title="Student Management API")
 
-# Add CORS Middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -18,13 +17,13 @@ app.include_router(auth.router, prefix="/api/v1/auth")
 app.include_router(students.router, prefix="/api/v1/students")
 
 Base.metadata.create_all(bind=engine)
-# check connectivity
+
 try:
     with engine.connect():
-        print("✔️  DB Connected successfully")
+        print("✔️ DB Connected successfully")
 except Exception as e:
-    print("❌DB Connection Failed:", e)
+    print("❌ DB Connection Failed:", e)
 
 @app.get("/")
-async def read():
+async def read_root():
     return {"message": "Server is running"}

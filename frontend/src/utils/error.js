@@ -6,7 +6,6 @@ export const formatError = (errorResponse) => {
   }
   
   if (Array.isArray(detail)) {
-    // Collect all error messages
     return detail.map(err => `${err.loc.join('.')}: ${err.msg}`).join(', ');
   }
   

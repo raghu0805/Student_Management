@@ -8,14 +8,12 @@ import {
 } from 'lucide-react';
 import { formatError } from '../utils/error';
 
-
 const AdminDashboard = () => {
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', course: '', year: 1 });
-
   const [error, setError] = useState('');
   const { user, logout } = useAuth();
 
@@ -41,16 +39,7 @@ const AdminDashboard = () => {
     setLoading(true);
     try {
       if (editingId) {
-        // According to routes/students.py, standard student update by admin is not clearly exposed as PUT /{id} except for /me.
-        // Wait, looking back at students.py:
-        // @router.put("/me") update_my_data
-        // @router.post("/") create_student
-        // @router.delete("/{id}") delete_student
-        // Seems PUT student {id} is missing in backend? Let me re-verify students.py.
-        // It has @router.get("/{id}"), @router.delete("/{id}").
-        // I should probably add an update endpoint for admin OR stick to what's there.
-        // Actually, user said "I build the backend". I shouldn't fix backend unless necessary.
-        // Let's check schemas/student.py or similar for update logic if any.
+        // Update logic if applicable
       } else {
         await api.post('/api/v1/students/', formData);
       }
@@ -60,7 +49,6 @@ const AdminDashboard = () => {
     } catch (err) {
       setError(formatError(err.response) || 'Action failed.');
     } finally {
-
       setLoading(false);
     }
   };
@@ -79,12 +67,10 @@ const AdminDashboard = () => {
     setEditingId(s.id);
     setFormData({ name: s.name, email: s.email, course: s.course, year: s.year });
     setShowModal(true);
-
   };
 
   return (
     <div className="dashboard-layout">
-      {/* Sidebar */}
       <aside className="sidebar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '2.5rem', padding: '0 0.5rem' }}>
           <div style={{ padding: '0.5rem', background: 'var(--primary)', borderRadius: '0.5rem' }}>
@@ -111,7 +97,6 @@ const AdminDashboard = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="main-content">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
           <div>
@@ -119,7 +104,6 @@ const AdminDashboard = () => {
             <p style={{ color: 'var(--text-muted)' }}>Manage student profiles and academic records</p>
           </div>
           <button className="btn btn-primary" style={{ width: 'auto', display: 'flex', gap: '0.5rem', alignItems: 'center' }} onClick={() => { setEditingId(null); setFormData({ name: '', email: '', course: '', year: 1 }); setShowModal(true); }}>
-
             <Plus size={20} />
             Add Student
           </button>
@@ -159,9 +143,6 @@ const AdminDashboard = () => {
                     <td><span className="badge badge-student">Active</span></td>
                     <td>
                       <div style={{ display: 'flex', gap: '0.75rem' }}>
-                        {/* <button className="btn" style={{ padding: '0.4rem', border: '1px solid var(--border)', background: 'transparent' }} onClick={() => openEdit(s)}>
-                          <Pencil size={16} color="var(--text-muted)" />
-                        </button> */}
                         <button className="btn" style={{ padding: '0.5rem', border: '1px solid rgba(239, 68, 68, 0.2)', background: 'transparent' }} onClick={() => handleDelete(s.id)}>
                           <Trash size={16} color="var(--danger)" />
                         </button>
@@ -180,7 +161,6 @@ const AdminDashboard = () => {
         </div>
       </main>
 
-      {/* Modal */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal">

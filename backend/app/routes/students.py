@@ -7,11 +7,8 @@ from app.models.user import User
 from app.schemas.student import StudentUpdate, StudentCreate
 from app.utils.security import hash_password
 
-
 router = APIRouter()
 
-
-# DB dependency
 def get_db():
     db = SessionLocal()
     try:
@@ -19,14 +16,12 @@ def get_db():
     finally:
         db.close()
 
-# ✅ STUDENT: Get own profile
 @router.get("/me")
 def get_my_data(
     user = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     db_user = db.query(User).filter(User.email == user["sub"]).first()
-
     student = db.query(Student).filter(Student.user_id == db_user.id).first()
 
     if not student:
@@ -34,8 +29,6 @@ def get_my_data(
 
     return student
 
-
-# ✅ STUDENT: Update own profile
 @router.put("/me")
 def update_my_data(
     student_data: StudentUpdate,
@@ -43,7 +36,6 @@ def update_my_data(
     db: Session = Depends(get_db)
 ):
     db_user = db.query(User).filter(User.email == user["sub"]).first()
-
     student = db.query(Student).filter(Student.user_id == db_user.id).first()
 
     if not student:
@@ -54,7 +46,6 @@ def update_my_data(
     student.year = student_data.year
 
     db.commit()
-
     db.refresh(student)
 
     return {
@@ -62,26 +53,23 @@ def update_my_data(
         "student": student
     }
 
-# ✅ ADMIN: Create Student (IMPORTANT FIX)
 @router.post("/")
 def create_student(
     student_data: StudentCreate,
     user = Depends(require_role("admin")),
     db: Session = Depends(get_db)
 ):
-    # find user first, if not exists, create one with default password
     db_user = db.query(User).filter(User.email == student_data.email).first()
     if not db_user:
         new_user = User(
             email=student_data.email,
-            password=hash_password("student123"), # Default password
+            password=hash_password("student123"),
             role="student"
         )
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
         db_user = new_user
-
 
     existing = db.query(Student).filter(Student.email == student_data.email).first()
     if existing:
@@ -92,9 +80,8 @@ def create_student(
         email=student_data.email,
         course=student_data.course,
         year=student_data.year,
-        user_id=db_user.id  
+        user_id=db_user.id
     )
-
 
     db.add(new_student)
     db.commit()
@@ -102,8 +89,6 @@ def create_student(
 
     return {"message": "Student created successfully"}
 
-
-# ✅ ADMIN: Get all students
 @router.get("/get-students")
 def get_all_students(
     user = Depends(require_role("admin")),
@@ -111,8 +96,6 @@ def get_all_students(
 ):
     return db.query(Student).all()
 
-
-# ✅ ADMIN: Get student by ID
 @router.get("/{id}")
 def get_student(
     id: int,
@@ -126,8 +109,6 @@ def get_student(
 
     return student
 
-
-# ✅ ADMIN: Delete student
 @router.delete("/{id}")
 def delete_student(
     id: int,
@@ -143,4 +124,3 @@ def delete_student(
     db.commit()
 
     return {"message": "Student deleted"}
-

@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Persistent login
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
     const email = localStorage.getItem('email');
